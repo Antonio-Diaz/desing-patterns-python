@@ -1,5 +1,5 @@
 from decimal import Decimal
-from payment import Payment
+from .payment import Payment
 
 class CreditCardPayment(Payment):
     
