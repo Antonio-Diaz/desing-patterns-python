@@ -113,7 +113,7 @@ class PaymentFactory:
                 raise ValueError(f"{payment_method} is not currently supported.")
 ```
 
-### Main Function
+### Main Function 
 The main function demonstrates how to use the PaymentFactory to create a payment method and then make a payment.
 
 
@@ -127,6 +127,33 @@ def main ():
     
 if __name__ == "__main__":
     main()
+
+```
+
+### Dynamic Payment Factory
+The DynamicPaymentFactory class dynamically loads all the payment types and provides a method to create a payment object based on the type.
+
+```python
+from inspect import getmembers, isclass, isabstract
+import payment_types
+
+class DynamicPaymentFactory(object):
+    payment_dict = {}
+    
+    def __init__(self) -> None:
+        self.load_payment_types()
+    
+    def load_payment_types(self):
+        members = getmembers(payment_types, lambda m: isclass(m) and not isabstract(m))
+        for name, _type in members:
+            if isclass(_type) and issubclass(_type, payment_types.Payment):
+                self.payment_dict[name] = _type
+    
+    def create(self, payment_type: str):
+        if payment_type in self.payment_dict:
+            return self.payment_dict[payment_type]()
+        else:
+            raise ValueError(f"{payment_type} is not currently supported")
 
 ```
 
